@@ -1,0 +1,1281 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>PluviCAD - Suite de Ingeniería y Drenaje Pluvial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #EEF2F2;
+      --surface: #FFFFFF;
+      --surface2: #F5F8F8;
+      --ink: #14292F;
+      --muted: #5A6D72;
+      --line: #D3DCDD;
+      --accent: #1D6FA5;
+      --onaccent: #FFFFFF;
+      --water: #2F8FD0;
+      --water2: #9CCBEA;
+      --pipe: #7D8A8E;
+      --pipefill: #E6ECED;
+      --ok: #23845A;
+      --okbg: #DFF2E8;
+      --warn: #A8700B;
+      --warnbg: #FBF0D9;
+      --bad: #B53A2E;
+      --badbg: #F8E1DD;
+      --focus: #1D6FA5;
+      --shadow: rgba(20, 41, 47, 0.06);
+      font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        color-scheme: dark;
+        --bg: #0E1719;
+        --surface: #152225;
+        --surface2: #1A2A2E;
+        --ink: #DCE7E9;
+        --muted: #8FA3A8;
+        --line: #2A3D42;
+        --accent: #5AB0E6;
+        --onaccent: #0E1719;
+        --water: #3E9BDB;
+        --water2: #8CC6EC;
+        --pipe: #8C9DA2;
+        --pipefill: #1B2B2F;
+        --ok: #4FC28A;
+        --okbg: #153A2A;
+        --warn: #E3AE4A;
+        --warnbg: #3A2E14;
+        --bad: #EE7B6E;
+        --badbg: #3E1D19;
+        --focus: #5AB0E6;
+        --shadow: rgba(0, 0, 0, 0.25);
+      }
+    }
+
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #0E1719;
+      --surface: #152225;
+      --surface2: #1A2A2E;
+      --ink: #DCE7E9;
+      --muted: #8FA3A8;
+      --line: #2A3D42;
+      --accent: #5AB0E6;
+      --onaccent: #0E1719;
+      --water: #3E9BDB;
+      --water2: #8CC6EC;
+      --pipe: #8C9DA2;
+      --pipefill: #1B2B2F;
+      --ok: #4FC28A;
+      --okbg: #153A2A;
+      --warn: #E3AE4A;
+      --warnbg: #3A2E14;
+      --bad: #EE7B6E;
+      --badbg: #3E1D19;
+      --focus: #5AB0E6;
+      --shadow: rgba(0, 0, 0, 0.25);
+    }
+
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #EEF2F2;
+      --surface: #FFFFFF;
+      --surface2: #F5F8F8;
+      --ink: #14292F;
+      --muted: #5A6D72;
+      --line: #D3DCDD;
+      --accent: #1D6FA5;
+      --onaccent: #FFFFFF;
+      --water: #2F8FD0;
+      --water2: #9CCBEA;
+      --pipe: #7D8A8E;
+      --pipefill: #E6ECED;
+      --ok: #23845A;
+      --okbg: #DFF2E8;
+      --warn: #A8700B;
+      --warnbg: #FBF0D9;
+      --bad: #B53A2E;
+      --badbg: #F8E1DD;
+      --focus: #1D6FA5;
+      --shadow: rgba(20, 41, 47, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding-inline: 16px;
+      padding-block: 20px 40px;
+      display: grid;
+      gap: 20px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+      background: var(--surface);
+      padding: 16px 20px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    header h1 {
+      font-family: "IBM Plex Sans Condensed", sans-serif;
+      font-weight: 700;
+      font-size: 26px;
+      margin: 0;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      max-width: 80ch;
+    }
+
+    .hactions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .hbtns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      background: var(--surface2);
+      color: var(--ink);
+      border-radius: 7px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font: 500 13px "IBM Plex Sans", sans-serif;
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--onaccent);
+    }
+
+    .btn.primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: default;
+    }
+
+    .btn svg { width: 16px; height: 16px; }
+
+    .savestate {
+      font-size: 12px;
+      color: var(--muted);
+      min-height: 1.2em;
+      text-align: right;
+    }
+
+    .savestate.dirty { color: var(--warn); font-weight: 500; }
+    .savestate.ok { color: var(--ok); }
+    .savestate.err { color: var(--bad); }
+
+    .nav-tabs {
+      display: flex;
+      gap: 6px;
+      background: var(--surface);
+      padding: 6px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 16px;
+      font: 600 14px "IBM Plex Sans Condensed", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      border-radius: 7px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: var(--onaccent);
+      box-shadow: 0 2px 6px var(--shadow);
+    }
+
+    .tab-btn:hover:not(.active) {
+      background: var(--surface2);
+      color: var(--ink);
+    }
+
+    /* Layout structure */
+    .layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 960px) {
+      .layout { grid-template-columns: 1fr; }
+      .hactions { align-items: flex-start; }
+      .savestate { text-align: left; }
+    }
+
+    /* Side Panel Form Elements */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 16px;
+      display: grid;
+      gap: 16px;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    h2.lbl {
+      font-family: "IBM Plex Sans Condensed", sans-serif;
+      font-size: 13px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .group { display: grid; gap: 10px; }
+    .field { display: grid; grid-template-columns: 1fr 110px; gap: 8px; align-items: center; }
+    .field.wide { grid-template-columns: 1fr; }
+    .field label { font-size: 13px; }
+    .field small { display: block; color: var(--muted); font-size: 11.5px; }
+
+    input[type=number], input[type=text], select {
+      width: 100%;
+      font: 500 13px "IBM Plex Mono", monospace;
+      color: var(--ink);
+      background: var(--surface2);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 6px 8px;
+      text-align: right;
+      min-width: 0;
+    }
+
+    input[type=text], select { text-align: left; font-family: "IBM Plex Sans", sans-serif; }
+    input[type=range] { width: 100%; accent-color: var(--accent); }
+    input:disabled { opacity: 0.6; color: var(--muted); background: transparent; border-style: dashed; }
+    :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+    .note { font-size: 12px; color: var(--muted); margin: 0; }
+
+    /* Content Cards and Components */
+    .main { display: grid; gap: 20px; min-width: 0; }
+    .block {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+      min-width: 0;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    .blockhead { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+    .summary { display: flex; flex-wrap: wrap; gap: 10px; }
+    .chip {
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 14px;
+      box-shadow: 0 1px 4px var(--shadow);
+    }
+    .chip b { font: 600 16px "IBM Plex Mono", monospace; }
+    .chip span { color: var(--muted); font-size: 12px; }
+
+    .tablewrap { overflow-x: auto; }
+    table.data-table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 650px;
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .data-table th {
+      font: 600 11px "IBM Plex Sans", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      color: var(--muted);
+      text-align: left;
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .data-table td { padding: 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+    .data-table td.n { font-family: "IBM Plex Mono", monospace; text-align: right; }
+    .data-table th.n { text-align: right; }
+    .data-table a { color: var(--accent); font-weight: 600; text-decoration: none; }
+    .data-table a:hover { text-decoration: underline; }
+
+    .pill {
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 99px;
+      letter-spacing: .3px;
+      white-space: nowrap;
+      display: inline-block;
+    }
+    .pill.ok { background: var(--okbg); color: var(--ok); }
+    .pill.warn { background: var(--warnbg); color: var(--warn); }
+    .pill.bad { background: var(--badbg); color: var(--bad); }
+
+    /* Node & Tramo Item Cards */
+    .nodes, .cards { display: grid; gap: 16px; }
+    .node, .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 16px;
+      display: grid;
+      gap: 16px;
+      min-width: 0;
+      scroll-margin-top: 12px;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    .nodehead { display: flex; align-items: center; gap: 10px; }
+    .nodehead .tag { font: 600 11px "IBM Plex Sans", sans-serif; letter-spacing: .8px; text-transform: uppercase; color: var(--muted); }
+    .nodehead input { font: 600 17px "IBM Plex Sans Condensed", sans-serif; max-width: 240px; background: transparent; border-color: transparent; }
+    .nodehead input:hover, .nodehead input:focus { border-color: var(--line); background: var(--surface2); }
+    .nodehead .sp { flex: 1; }
+
+    .nodegrid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 18px; }
+    .nodegrid .ed + .ed { border-left: 1px solid var(--line); padding-left: 18px; }
+    @media (max-width: 840px) {
+      .nodegrid { grid-template-columns: 1fr; }
+      .nodegrid .ed + .ed { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 14px; }
+    }
+
+    .card { grid-template-columns: minmax(260px, 320px) 1fr; }
+    .cardL { display: grid; gap: 10px; align-content: start; }
+    .cardR { display: grid; gap: 6px; align-content: start; min-width: 0; border-left: 1px solid var(--line); padding-left: 18px; }
+    @media (max-width: 840px) {
+      .card { grid-template-columns: 1fr; }
+      .cardR { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 14px; }
+    }
+
+    .ed { display: grid; gap: 10px; align-content: start; min-width: 0; }
+    .lbl2 { font: 600 11px "IBM Plex Sans", sans-serif; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); }
+    
+    .aps { display: grid; gap: 6px; }
+    .ap { display: grid; grid-template-columns: 12px minmax(0, 1fr) minmax(0, 1.15fr) 90px 30px; gap: 6px; align-items: center; }
+    .ap .sw { width: 10px; height: 10px; border-radius: 2px; }
+    .aphead { font: 600 10.5px "IBM Plex Sans", sans-serif; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); }
+    
+    .iconbtn {
+      border: 1px solid var(--line);
+      background: var(--surface2);
+      color: var(--muted);
+      border-radius: 6px;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      font-size: 15px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .iconbtn:hover { color: var(--bad); border-color: var(--bad); }
+
+    .addbtn {
+      justify-self: start;
+      border: 1px dashed var(--line);
+      background: transparent;
+      color: var(--accent);
+      border-radius: 6px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font: 500 13px "IBM Plex Sans", sans-serif;
+      transition: all 0.2s;
+    }
+    .addbtn:hover { border-color: var(--accent); background: var(--surface2); }
+    .addbtn.big { padding: 10px 16px; font-size: 14px; font-weight: 600; width: 100%; text-align: center; justify-content: center; }
+
+    .qsum { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--line); padding-top: 8px; font-size: 13px; }
+    .qsum b { font: 600 15px "IBM Plex Mono", monospace; color: var(--accent); }
+
+    .pipe4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+    .pipe4 label { display: grid; gap: 3px; font-size: 11.5px; color: var(--muted); }
+    .pipe4 .mm { font: 500 13px "IBM Plex Mono", monospace; color: var(--accent); padding: 6px 0; text-align: right; }
+
+    .viz { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 14px; align-items: center; }
+    .viz svg { width: 100%; height: auto; max-width: 140px; }
+    .big { font: 500 30px "IBM Plex Mono", monospace; line-height: 1; }
+    .big small { font-size: 14px; color: var(--muted); }
+
+    .bar { position: relative; height: 10px; border-radius: 5px; background: var(--surface2); border: 1px solid var(--line); overflow: hidden; margin-top: 8px; }
+    .bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--water); transition: width .35s; }
+    .bar em { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--bad); }
+    .barlbl { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 3px; font-variant-numeric: tabular-nums; }
+
+    .stack { display: flex; height: 14px; border-radius: 4px; overflow: hidden; gap: 2px; background: var(--surface); }
+    .stack span { display: block; height: 100%; min-width: 3px; }
+
+    dl { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; font-size: 12.5px; }
+    dt { color: var(--muted); }
+    dd { margin: 0; font: 500 12.5px "IBM Plex Mono", monospace; text-align: right; }
+
+    .minichecks { display: flex; flex-wrap: wrap; gap: 6px; }
+    .minichecks .pill { font-weight: 500; }
+    .err { color: var(--bad); font-size: 12.5px; margin: 0; }
+
+    .profilewrap { border-top: 1px solid var(--line); padding-top: 14px; min-width: 0; }
+    .drw { display: grid; grid-template-columns: minmax(280px, 320px) minmax(0, 1fr); gap: 20px; align-items: start; }
+    .xsec { display: grid; gap: 10px; align-content: start; min-width: 0; border-right: 1px solid var(--line); padding-right: 18px; }
+    .lng { display: grid; gap: 6px; min-width: 0; align-content: start; }
+    .lscroll { overflow-x: auto; }
+    .lscroll svg { display: block; width: 100%; min-width: 420px; height: auto; }
+
+    .svgtext { font: 500 13px "IBM Plex Mono", monospace; fill: var(--muted); }
+    .svgink { font: 600 14px "IBM Plex Mono", monospace; fill: var(--ink); }
+
+    .method ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; max-width: 90ch; }
+    .method code { font: 12.5px "IBM Plex Mono", monospace; background: var(--surface2); padding: 1px 5px; border-radius: 4px; }
+    .confirm { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 12.5px; }
+
+    @media (prefers-reduced-motion: reduce) { .bar i { transition: none; } }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+        </svg>
+        PluviCAD - Ingeniería de Drenaje Pluvial
+      </h1>
+      <p>Plataforma hidráulica para la verificación de colectores, tirantes a sección parcial (Manning/H-Canales), redes en cascada y caudales pluviales con la Norma CE.040.</p>
+    </div>
+    <div class="hactions">
+      <div class="hbtns">
+        <button class="btn primary" id="saveBtn" title="Guardar cambios (Ctrl+S)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Guardar
+        </button>
+        <button class="btn" id="themeBtn" aria-label="Cambiar tema"></button>
+      </div>
+      <div class="savestate" id="saveState" role="status" aria-live="polite"></div>
+    </div>
+  </header>
+
+  <!-- Navigation Tab Bar -->
+  <nav class="nav-tabs" aria-label="Herramientas de drenaje">
+    <button class="tab-btn active" id="tabNodos" onclick="switchTab('nodos')">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.5 8.5l7 7M6 9v9h9"/></svg>
+      Verificación por Nodos / Red en Cascadas
+    </button>
+    <button class="tab-btn" id="tabRacional" onclick="switchTab('racional')">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14.89 12 3l8 11.89A8 8 0 1 1 4 14.89z"/><path d="M12 11v6M12 20h.01"/></svg>
+      Método Racional y Tramo Directo (CE.040)
+    </button>
+  </nav>
+
+  <div id="viewNodos" class="layout">
+    <aside class="panel" aria-label="Parámetros Nodos">
+      <div class="group">
+        <h2 class="lbl">Proyecto</h2>
+        <div class="field wide"><label for="proj1">Nombre del proyecto</label><input id="proj1" type="text"></div>
+        <div class="field wide"><label for="loc1">Ubicación</label><input id="loc1" type="text"></div>
+      </div>
+      <div class="group">
+        <h2 class="lbl">Tubería y Criterios</h2>
+        <div class="field"><label for="n1">Manning n<small>PVC ≈ 0.009</small></label><input id="n1" type="number" step="0.001" min="0.005"></div>
+        <div class="field"><label for="ymax1">Llenado máx. y/D (%)</label><input id="ymax1" type="number" step="1" min="10" max="93"></div>
+        <div class="field"><label for="smin1">Pendiente mín. (%)<small>CE.040 Art. 12.4: 1 %</small></label><input id="smin1" type="number" step="0.1" min="0.1"></div>
+      </div>
+      <p class="note">Caudales en L/s. El diámetro de cálculo es Ø pulg × 25.4 mm. Si un aporte viene de otro nodo, elige «Salida de …» para acumular caudales en cascada.</p>
+      <div class="confirm" id="resetWrap1"><button class="btn" id="resetBtn1">Restablecer ejemplo</button></div>
+    </aside>
+
+    <div class="main">
+      <div class="summary" id="summary1"></div>
+
+      <section class="block" aria-labelledby="netH">
+        <h2 class="lbl" id="netH">Resumen de la Red por Nodos</h2>
+        <div class="tablewrap">
+          <table class="data-table">
+            <thead>
+              <tr><th>Nodo</th><th class="n">Aportes</th><th class="n">Q total (L/s)</th><th class="n">Ø (pulg)</th><th class="n">S (%)</th><th class="n">y/D</th><th class="n">Q adm. (L/s)</th><th>Estado</th></tr>
+            </thead>
+            <tbody id="netBody1"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="nodes" id="nodesBox"></div>
+      <button class="addbtn big" id="addNodeBtn">+ Agregar Nodo a la Red</button>
+    </div>
+  </div>
+
+  <div id="viewRacional" class="layout" hidden>
+    <aside class="panel" aria-label="Parámetros Método Racional">
+      <div class="group">
+        <h2 class="lbl">Proyecto</h2>
+        <div class="field wide"><label for="proj2">Nombre del proyecto</label><input id="proj2" type="text"></div>
+        <div class="field wide"><label for="loc2">Ubicación</label><input id="loc2" type="text"></div>
+      </div>
+      <div class="group">
+        <h2 class="lbl">Parámetros de Lluvia</h2>
+        <div class="field"><label for="I2">Intensidad I (mm/h)<small>De curva IDF / SENAMHI</small></label><input id="I2" type="number" step="0.1" min="0.1"></div>
+        <input id="Irange2" type="range" min="5" max="200" step="0.5" aria-label="Intensidad de lluvia">
+        <div class="field"><label for="tr2">Periodo Retorno TR (años)<small>Ajusta coef. C según CE.040</small></label><input id="tr2" type="number" step="1" min="2" max="500"></div>
+        <div class="field"><label for="C2">Coeficiente C<small>Redondeado a 2 decimales</small></label><input id="C2" type="number" step="0.01" min="0" max="1"></div>
+      </div>
+      <div class="group">
+        <h2 class="lbl">Tubería</h2>
+        <div class="field"><label for="n2">Manning n<small>PVC ≈ 0.009</small></label><input id="n2" type="number" step="0.001" min="0.005"></div>
+        <div class="field"><label for="ymax2">Llenado máx. y/D (%)</label><input id="ymax2" type="number" step="1" min="10" max="93"></div>
+      </div>
+      <p class="note">Aplica el Método Racional $Q = C \cdot I \cdot A / 3.6$ según la norma CE.040 (tiempo de concentración tc ≥ 10 min).</p>
+      <button class="btn" id="resetBtn2">Restablecer ejemplo</button>
+    </aside>
+
+    <div class="main">
+      <section class="block" aria-labelledby="tramosH">
+        <div class="blockhead"><h2 class="lbl" id="tramosH">Tramos Directos</h2><span class="note">Caída del tramo: Δh = S · L</span></div>
+        <div class="tablewrap">
+          <table class="data-table">
+            <thead>
+              <tr><th>Nombre</th><th>Área (m²)</th><th>Puntos</th><th>Ø (pulg)</th><th>Ø (mm)</th><th>S (%)</th><th>L (m)</th><th></th></tr>
+            </thead>
+            <tbody id="tramosBody2"></tbody>
+          </table>
+        </div>
+        <button class="addbtn" id="addTramoBtn">+ Agregar Tramo</button>
+      </section>
+
+      <div class="summary" id="summary2"></div>
+      <div class="cards" id="cardsBox2"></div>
+    </div>
+  </div>
+
+  <section class="block method">
+    <h2 class="lbl">Metodología de Cálculo e Ingeniería Hidráulica</h2>
+    <ol>
+      <li><b>Caudales en Redes/Cascada:</b> El caudal total por nodo es $Q = \sum Q_{\text{aporte}}$. Los aportes tipo «Salida de nodo» toman recursivamente el caudal de aguas arriba.</li>
+      <li><b>Método Racional (CE.040 Art. 11.2):</b> $Q = \frac{C \cdot I \cdot A}{3.6}$ ($Q$ en m³/s, $A$ en km², $I$ en mm/h). El gasto se divide proporcionalmente entre los puntos de drenaje.</li>
+      <li><b>Sección Parcial (Ecuación de Manning):</b> Resuelto iterativamente para el tirante normal $y$:
+        <br>$$\theta = 2 \cdot \arccos\left(1 - \frac{2y}{D}\right), \quad A = \frac{D^2}{8}(\theta - \sin\theta), \quad P = \frac{\theta D}{2}, \quad R = \frac{A}{P}$$
+        $$Q = \frac{1}{n} A R^{2/3} S^{1/2}$$
+      </li>
+      <li><b>Verificaciones Normativas (Norma Peruana CE.040):</b> Llenado máximo $y/D \le 75\%$, pendiente mínima $S \ge 1\%$, diámetro mínimo comercial $D \ge 0.10\text{ m}$ ($4"$).</li>
+    </ol>
+  </section>
+</div>
+
+<script>
+(function() {
+  // --- Constants & Utilities ---
+  const COMM = [2, 2.5, 3, 4, 6, 8, 10, 12];
+  const CT = [[2, 0.75], [5, 0.80], [10, 0.83], [25, 0.88], [50, 0.92], [100, 0.97], [500, 1.0]];
+  const uid = () => 'n' + Math.random().toString(36).slice(2, 8);
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+  const f = (x, d) => Number.isFinite(x) ? x.toLocaleString('es-PE', { minimumFractionDigits: d, maximumFractionDigits: d }) : '—';
+  const p = (x, d) => Number.isFinite(x) ? x.toFixed(d) : '—';
+  const inch = d => p(d, 2).replace(/\.?0+$/, '');
+  const cOf = tr => {
+    if (tr >= 500) return 1.0;
+    for (let i = 0; i < CT.length - 1; i++) {
+      const [t1, c1] = CT[i], [t2, c2] = CT[i + 1];
+      if (tr >= t1 && tr <= t2) return c1 + (tr - t1) * (c2 - c1) / (t2 - t1);
+    }
+    return CT[0][1];
+  };
+
+  // --- Initial Default States ---
+  const DEF_NODOS = () => {
+    const a = uid(), b = uid(), c = uid();
+    return {
+      proj: 'Verificación de Nodos y Red en Cascadas (Ejemplo)',
+      loc: 'Cusco', n: 0.009, ymax: 75, smin: 1,
+      nodos: [
+        { id: a, name: 'N-1', d: 3, S: 1, L: 8, aportes: [{ name: 'Techo A', src: 'q', q: 0.41 }, { name: 'Techo B', src: 'q', q: 0.33 }] },
+        { id: b, name: 'N-2', d: 3, S: 1, L: 6, aportes: [{ name: 'Techo C', src: 'q', q: 0.42 }, { name: 'Patio', src: 'q', q: 0.28 }] },
+        { id: c, name: 'N-3', d: 4, S: 1, L: 12, aportes: [{ name: 'Desde N-1', src: a, q: 0 }, { name: 'Desde N-2', src: b, q: 0 }, { name: 'Techo D', src: 'q', q: 0.36 }] }
+      ]
+    };
+  };
+
+  const DEF_RACIONAL = () => ({
+    proj: 'Verificación Racional de Techos CE.040',
+    loc: 'Cusco', tr: 10, I: 16.9, C: 0.83, n: 0.009, ymax: 75,
+    tramos: [
+      { name: 'Tramo 1 - Techo Principal', a: 104.27, p: 1, d: 3, S: 1, L: 10 },
+      { name: 'Tramo 2 - Patio Central', a: 83.69, p: 1, d: 3, S: 1, L: 10 },
+      { name: 'Tramo 3 - Colector Salida', a: 107.71, p: 1, d: 4, S: 1, L: 12 }
+    ]
+  });
+
+  const KEY_NODOS = 'plu_nodos_v2';
+  const KEY_RACIONAL = 'plu_racional_v2';
+
+  let stNodos, stRacional, currentTab = 'nodos', dirty = false;
+
+  // Load persistence
+  try {
+    const r1 = JSON.parse(localStorage.getItem(KEY_NODOS));
+    if (r1 && Array.isArray(r1.nodos)) stNodos = r1;
+  } catch (e) {}
+  if (!stNodos) stNodos = DEF_NODOS();
+
+  try {
+    const r2 = JSON.parse(localStorage.getItem(KEY_RACIONAL));
+    if (r2 && Array.isArray(r2.tramos)) stRacional = r2;
+  } catch (e) {}
+  if (!stRacional) stRacional = DEF_RACIONAL();
+
+  function saveAll() {
+    try {
+      localStorage.setItem(KEY_NODOS, JSON.stringify(stNodos));
+      localStorage.setItem(KEY_RACIONAL, JSON.stringify(stRacional));
+      dirty = false;
+      paintSave();
+    } catch (e) {
+      paintSave('Error al guardar datos locales', 'err');
+    }
+  }
+
+  function paintSave(msg, cls) {
+    const el = $('saveState');
+    if (msg) { el.textContent = msg; el.className = 'savestate ' + (cls || ''); return; }
+    if (dirty) { el.textContent = 'Cambios sin guardar'; el.className = 'savestate dirty'; }
+    else { el.textContent = 'Guardado localmente'; el.className = 'savestate ok'; }
+  }
+
+  $('saveBtn').addEventListener('click', saveAll);
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); saveAll(); }
+  });
+
+  // --- Theme Controller ---
+  const root = document.documentElement;
+  const sysDark = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  let theme; try { theme = localStorage.getItem('plu_theme'); } catch (e) {}
+  if (theme) root.setAttribute('data-theme', theme);
+
+  const sun = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+  const moon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+
+  const paintTheme = () => {
+    const isD = root.getAttribute('data-theme') ? root.getAttribute('data-theme') === 'dark' : sysDark();
+    $('themeBtn').innerHTML = isD ? sun + 'Tema Claro' : moon + 'Tema Oscuro';
+  };
+  $('themeBtn').addEventListener('click', () => {
+    const isD = root.getAttribute('data-theme') ? root.getAttribute('data-theme') === 'dark' : sysDark();
+    const t = isD ? 'light' : 'dark';
+    root.setAttribute('data-theme', t);
+    try { localStorage.setItem('plu_theme', t); } catch (e) {}
+    paintTheme();
+    update();
+  });
+  paintTheme();
+
+  const g = 9.81;
+  function sect(y, D) {
+    const th = 2 * Math.acos(Math.max(-1, Math.min(1, 1 - 2 * y / D)));
+    const A = D * D / 8 * (th - Math.sin(th));
+    const P = th * D / 2;
+    const T = D * Math.sin(th / 2);
+    return { th, A, P, R: P > 0 ? A / P : 0, T };
+  }
+
+  const qMan = (y, D, n, S) => {
+    const s = sect(y, D);
+    return (1 / n) * s.A * Math.pow(s.R, 2 / 3) * Math.sqrt(S);
+  };
+
+  function solveY(Q, D, n, S) {
+    const top = 0.938 * D;
+    if (Q >= qMan(top, D, n, S)) return null; // Overflow / full
+    let lo = 0, hi = top;
+    for (let i = 0; i < 60; i++) {
+      const m = (lo + hi) / 2;
+      if (qMan(m, D, n, S) < Q) lo = m;
+      else hi = m;
+    }
+    return (lo + hi) / 2;
+  }
+
+  // --- Network Cascade Calculations ---
+  function totalsNodos() {
+    const byId = {}; stNodos.nodos.forEach(nd => byId[nd.id] = nd);
+    const memo = {}, visiting = {};
+    const qOf = id => {
+      if (id in memo) return memo[id];
+      const nd = byId[id]; if (!nd) return 0;
+      if (visiting[id]) return NaN; // Circular
+      visiting[id] = true;
+      let s = 0;
+      nd.aportes.forEach(a => { s += a.src === 'q' ? (Number(a.q) || 0) : qOf(a.src); });
+      visiting[id] = false; memo[id] = s; return s;
+    };
+    stNodos.nodos.forEach(nd => qOf(nd.id));
+    return { memo, byId };
+  }
+
+  function computeNodo(nd, QLs) {
+    const D = nd.d * 25.4 / 1000, S = nd.S / 100, n = stNodos.n, lim = stNodos.ymax / 100, Q = QLs / 1000;
+    const Qadm = qMan(lim * D, D, n, S);
+    const r = { nd, D, S, Q, QLs, Qadm, lim, cyc: !Number.isFinite(QLs) };
+
+    if (r.cyc) {
+      r.frac = NaN; r.okY = false;
+    } else {
+      const y = Q > 0 ? solveY(Q, D, n, S) : 0;
+      r.y = y; r.full = y === null;
+      if (y === null) { r.frac = 1; }
+      else if (y > 0) {
+        const s = sect(y, D);
+        r.frac = y / D;
+        r.v = Q / s.A;
+        r.Fr = s.T > 0 ? r.v / Math.sqrt(g * s.A / s.T) : 0;
+      } else { r.frac = 0; r.v = 0; r.Fr = 0; }
+
+      r.okY = !r.full && r.frac <= lim;
+      r.Smin = S * Math.pow(Q / (Qadm || 1), 2) * 100;
+      r.dmin = COMM.find(dd => {
+        const DD = dd * 25.4 / 1000;
+        return qMan(lim * DD, DD, n, S) >= Q;
+      });
+    }
+
+    r.okD = D >= 0.0999;
+    r.okS = nd.S >= stNodos.smin;
+    r.state = r.cyc ? 'bad' : !r.okY ? 'bad' : (r.frac > lim * 0.85 || !r.okS) ? 'warn' : 'ok';
+    r.txt = r.cyc ? 'Ciclo Detectado' : !r.okY ? 'Supera Límite' : r.frac > lim * 0.85 ? 'Al Límite' : !r.okS ? 'Pendiente Baja' : 'Cumple';
+    return r;
+  }
+
+  const swatch = i => `color-mix(in srgb, var(--water) ${100 - ((i * 23) % 60)}%, var(--ink) ${(i * 23) % 60 * 0.5}%)`;
+
+  function pipeSVG(frac, limit) {
+    const cx = 60, cy = 60, R = 46, W = 7;
+    let water = '';
+    if (frac > 0) {
+      const h = Math.min(frac, 0.999), yl = cy + R - 2 * R * h;
+      const half = Math.sqrt(Math.max(R * R - (yl - cy) ** 2, 0));
+      water = `<path d="M ${cx - half} ${yl} A ${R} ${R} 0 ${h > 0.5 ? 1 : 0} 0 ${cx + half} ${yl} Z" fill="var(--water)"/>`;
+    }
+    const yl2 = cy + R - 2 * R * limit;
+    const h2 = Math.sqrt(Math.max(R * R - (yl2 - cy) ** 2, 0));
+
+    return `<svg viewBox="0 0 120 120" role="img">
+      <circle cx="${cx}" cy="${cy}" r="${R}" fill="var(--pipefill)"/>
+      ${water}
+      <line x1="${cx - h2}" y1="${yl2}" x2="${cx + h2}" y2="${yl2}" stroke="var(--bad)" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <circle cx="${cx}" cy="${cy}" r="${R + W / 2}" fill="none" stroke="var(--pipe)" stroke-width="${W}"/>
+    </svg>`;
+  }
+
+  function profileSVG(r, isRacional) {
+    const name = isRacional ? r.t.name : r.nd.name;
+    const S_val = isRacional ? r.t.S : r.nd.S;
+    const L_val = isRacional ? r.t.L : r.nd.L;
+    const d_val = isRacional ? r.t.d : r.nd.d;
+    const Q_ls = isRacional ? r.Q * 1000 : r.QLs;
+    const idx = isRacional ? 'rac_' + Math.random().toString(36).slice(2, 6) : r.nd.id;
+
+    const W = 590, x0 = 8, x1 = 470, Hp = 110, yc0 = 145;
+    const drop = Math.max(14, Math.min(140, 10 + S_val * 24)), yc1 = yc0 + drop;
+    const yc = x => yc0 + (x - x0) * (yc1 - yc0) / (x1 - x0);
+    const tb = x => yc(x) + Hp / 2, tt = x => yc(x) - Hp / 2;
+    const h = Math.min(r.frac || 0, 1), hl = r.lim;
+    const dh = S_val / 100 * L_val, H = Math.ceil(tb(x1) + 90);
+    const xm = (x0 + x1) / 2;
+
+    let arrows = '';
+    const aw = Math.max(6, Math.min(12, h * Hp * 0.45));
+    const ang = Math.atan2(yc1 - yc0, x1 - x0) * 180 / Math.PI;
+    for (const xa of [x0 + 80, xm - 110, x1 - 80]) {
+      const ya = tb(xa) - h * Hp / 2;
+      arrows += `<path transform="translate(${xa} ${ya}) rotate(${ang})" d="M ${-aw * 1.4} 0 L ${aw * 1.4} 0 M ${aw * 0.6} ${-aw * 0.6} L ${aw * 1.4} 0 L ${aw * 0.6} ${aw * 0.6}" stroke="var(--onaccent)" stroke-width="1.6" fill="none" opacity="${h > 0.08 ? 0.9 : 0}"/>`;
+    }
+
+    const ysurf = tb(xm) - h * Hp, ybot = tb(xm), Lb = tb(x1) + 44;
+
+    return `<svg viewBox="0 0 ${W} ${H}" role="img">
+      <defs><marker id="ar_${idx}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+      <polygon points="${x0},${tt(x0)} ${x1},${tt(x1)} ${x1},${tb(x1)} ${x0},${tb(x0)}" fill="var(--pipefill)"/>
+      <polygon points="${x0},${tb(x0)} ${x1},${tb(x1)} ${x1},${tb(x1) - h * Hp} ${x0},${tb(x0) - h * Hp}" fill="var(--water)"/>
+      ${arrows}
+      <line x1="${x0}" y1="${tb(x0) - hl * Hp}" x2="${x1}" y2="${tb(x1) - hl * Hp}" stroke="var(--bad)" stroke-width="1.2" stroke-dasharray="6 4"/>
+      <text x="${x0 + 10}" y="${tb(x0) - hl * Hp + 16}" class="svgtext" style="fill:var(--bad)">y/D máx ${Math.round(hl * 100)} %</text>
+      <line x1="${x0}" y1="${tt(x0)}" x2="${x1}" y2="${tt(x1)}" stroke="var(--pipe)" stroke-width="6"/>
+      <line x1="${x0}" y1="${tb(x0)}" x2="${x1}" y2="${tb(x1)}" stroke="var(--pipe)" stroke-width="6"/>
+      <line x1="${x0}" y1="${tt(x0) - 3}" x2="${x0}" y2="${tb(x0) + 3}" stroke="var(--pipe)" stroke-width="2"/>
+      <line x1="${x1}" y1="${tt(x1) - 3}" x2="${x1}" y2="${tb(x1) + 3}" stroke="var(--pipe)" stroke-width="2"/>
+      <text x="${x0 + 10}" y="${tt(x0) - 26}" class="svgink">${esc(name)}</text>
+      <text x="${x0 + 10}" y="${tt(x0) - 10}" class="svgtext">Q = ${p(Q_ls, 3)} L/s</text>
+      <text x="${x1}" y="${tb(x1) + 20}" text-anchor="end" class="svgink">Salida / Llegada</text>
+      <text x="${x1}" y="${tb(x1) + 34}" text-anchor="end" class="svgtext">Desnivel Δh = −${p(dh, 3)} m</text>
+      <text x="${x1}" y="${tt(x0) - 45}" text-anchor="end" class="svgink">S = ${p(S_val, 2)} %</text>
+      <line x1="${xm}" y1="${ybot}" x2="${xm}" y2="${ysurf}" stroke="var(--ink)" stroke-width="1.4" marker-start="url(#ar_${idx})" marker-end="url(#ar_${idx})"/>
+      <text x="${xm + 10}" y="${Math.min(ybot, Math.max(ysurf, ybot - h * Hp / 2)) + 4}" class="svgink">y = ${r.full ? 'Lleno' : p((r.y || 0) * 1000, 1) + ' mm'} (${p(h * 100, 1)} %)</text>
+      <line x1="${x1 + 22}" y1="${tt(x1)}" x2="${x1 + 22}" y2="${tb(x1)}" stroke="var(--muted)" stroke-width="1" marker-start="url(#ar_${idx})" marker-end="url(#ar_${idx})"/>
+      <text x="${x1 + 30}" y="${yc1 - 4}" class="svgink">Ø ${inch(d_val)}"</text>
+      <text x="${x1 + 30}" y="${yc1 + 11}" class="svgtext">${p(r.D * 1000, 1)} mm</text>
+      <line x1="${x0}" y1="${Lb}" x2="${x1}" y2="${Lb}" stroke="var(--muted)" stroke-width="1" marker-start="url(#ar_${idx})" marker-end="url(#ar_${idx})"/>
+      <line x1="${x0}" y1="${tb(x0) + 8}" x2="${x0}" y2="${Lb + 6}" stroke="var(--line)" stroke-width="1"/>
+      <line x1="${x1}" y1="${tb(x1) + 38}" x2="${x1}" y2="${Lb + 6}" stroke="var(--line)" stroke-width="1"/>
+      <text x="${(x0 + x1) / 2}" y="${Lb - 6}" text-anchor="middle" class="svgtext">L = ${p(L_val, 2)} m</text>
+    </svg>`;
+  }
+
+  const pos = v => { const x = parseFloat(v); return Number.isFinite(x) && x > 0 ? x : null; };
+  const nonneg = v => { const x = parseFloat(v); return Number.isFinite(x) && x >= 0 ? x : null; };
+
+  function srcOptions(nd, a) {
+    let o = `<option value="q"${a.src === 'q' ? ' selected' : ''}>Caudal directo (L/s)</option>`;
+    stNodos.nodos.forEach(m => {
+      if (m.id !== nd.id) o += `<option value="${m.id}" data-node="${m.id}"${a.src === m.id ? ' selected' : ''}>Salida de ${esc(m.name) || 'nodo'}</option>`;
+    });
+    return o;
+  }
+
+  function renderAps(nd) {
+    const box = $('aps-' + nd.id);
+    if (!box) return;
+    box.innerHTML = `<div class="ap aphead" aria-hidden="true"><span></span><span>Aporte</span><span>Origen</span><span style="text-align:right">Q (L/s)</span><span></span></div>`;
+    nd.aportes.forEach((a, j) => {
+      const row = document.createElement('div'); row.className = 'ap';
+      const k = nd.id + '-' + j;
+      row.innerHTML = `<span class="sw" style="background:${swatch(j)}"></span>
+        <input type="text" id="an-${k}" value="${esc(a.name)}" aria-label="Nombre del aporte">
+        <select id="as-${k}" aria-label="Origen del aporte">${srcOptions(nd, a)}</select>
+        <input type="number" id="aq-${k}" step="0.01" min="0" value="${a.src === 'q' ? a.q : ''}" ${a.src === 'q' ? '' : 'disabled'} aria-label="Caudal">
+        <button class="iconbtn" aria-label="Quitar aporte">×</button>`;
+      row.querySelector('#an-' + k).addEventListener('input', e => { a.name = e.target.value; changed(); });
+      row.querySelector('#aq-' + k).addEventListener('input', e => { const v = nonneg(e.target.value); if (v !== null) { a.q = v; changed(); } });
+      row.querySelector('#as-' + k).addEventListener('change', e => { a.src = e.target.value; renderAps(nd); changed(); });
+      row.querySelector('button').addEventListener('click', () => { nd.aportes.splice(j, 1); renderAps(nd); changed(); });
+      box.appendChild(row);
+    });
+  }
+
+  function renderNodos() {
+    const box = $('nodesBox'); box.innerHTML = '';
+    stNodos.nodos.forEach((nd, i) => {
+      const el = document.createElement('article'); el.className = 'node'; el.id = 'node-' + nd.id;
+      el.innerHTML = `<div class="nodehead">
+          <span class="tag">Nodo</span>
+          <input type="text" id="nn-${nd.id}" value="${esc(nd.name)}" aria-label="Nombre del nodo">
+          <span class="pill" id="pill-${nd.id}"></span><span class="sp"></span>
+          <span class="confirm" id="rm-${nd.id}"><button class="iconbtn" aria-label="Quitar nodo">×</button></span>
+        </div>
+        <div class="nodegrid">
+          <div class="ed">
+            <div class="lbl2">Caudales de Aporte Entrantes</div>
+            <div class="aps" id="aps-${nd.id}"></div>
+            <button class="addbtn" id="addap-${nd.id}">+ Agregar Aporte</button>
+            <div class="qsum"><span>Q Total en Nodo</span><b id="qt-${nd.id}"></b></div>
+          </div>
+          <div class="ed">
+            <div class="lbl2">Tubería de Salida (Colección)</div>
+            <div class="pipe4">
+              <label>Ø (pulg)<input type="number" id="nd-${nd.id}" step="0.5" min="0.5" list="dlist" value="${nd.d}"></label>
+              <label>Ø (mm)<span class="mm" id="nmm-${nd.id}">${p(nd.d * 25.4, 1)}</span></label>
+              <label>S (%)<input type="number" id="ns-${nd.id}" step="0.1" min="0.1" value="${nd.S}"></label>
+              <label>L (m)<input type="number" id="nl-${nd.id}" step="0.5" min="0.1" value="${nd.L}"></label>
+            </div>
+          </div>
+        </div>
+        <div class="profilewrap" id="prof-${nd.id}">
+          <p class="err" id="cy-${nd.id}" hidden>⚠️ Bucle de flujo detectado: este nodo depende de su propia salida.</p>
+          <div class="drw" id="drw-${nd.id}">
+            <section class="xsec" id="xs-${nd.id}"></section>
+            <div class="lng">
+              <div class="lbl2">Perfil Longitudinal Tubería de Salida</div>
+              <div class="lscroll" id="ls-${nd.id}"></div>
+            </div>
+          </div>
+        </div>`;
+      box.appendChild(el);
+      renderAps(nd);
+
+      el.querySelector('#nn-' + nd.id).addEventListener('input', e => {
+        nd.name = e.target.value;
+        document.querySelectorAll(`option[data-node="${nd.id}"]`).forEach(o => o.textContent = 'Salida de ' + (nd.name || 'nodo'));
+        changed();
+      });
+
+      const bind = (id, k) => el.querySelector('#' + id).addEventListener('input', e => {
+        const v = pos(e.target.value);
+        if (v !== null) { nd[k] = v; if (k === 'd') $('nmm-' + nd.id).textContent = p(v * 25.4, 1); changed(); }
+      });
+      bind('nd-' + nd.id, 'd'); bind('ns-' + nd.id, 'S'); bind('nl-' + nd.id, 'L');
+
+      el.querySelector('#addap-' + nd.id).addEventListener('click', () => {
+        nd.aportes.push({ name: 'Aporte ' + (nd.aportes.length + 1), src: 'q', q: 0.3 });
+        renderAps(nd); changed();
+      });
+
+      const rm = el.querySelector('#rm-' + nd.id);
+      rm.querySelector('button').addEventListener('click', () => {
+        rm.innerHTML = `<span>¿Eliminar?</span><button class="btn" data-y>Sí</button><button class="btn" data-n>No</button>`;
+        rm.querySelector('[data-n]').addEventListener('click', () => renderNodos());
+        rm.querySelector('[data-y]').addEventListener('click', () => {
+          stNodos.nodos.splice(stNodos.nodos.indexOf(nd), 1);
+          stNodos.nodos.forEach(m => m.aportes.forEach(a => { if (a.src === nd.id) { a.src = 'q'; a.q = 0; } }));
+          renderNodos(); changed();
+        });
+      });
+    });
+    if (!stNodos.nodos.length) box.innerHTML = '<p class="note">No hay nodos creados en la red.</p>';
+  }
+
+  function computeRacional(t) {
+    const D = t.d * 25.4 / 1000, S = t.S / 100, n = stRacional.n, lim = stRacional.ymax / 100;
+    const Akm = t.a / 1e6, Cr = Math.round(stRacional.C * 100) / 100;
+    const Qt = Cr * stRacional.I * Akm / 3.6, Q = Qt / Math.max(1, t.p);
+    const Qf = Math.PI * D * D / 4 * Math.pow(D / 4, 2 / 3) * Math.sqrt(S) / n;
+    const y = solveY(Q, D, n, S);
+
+    let r = { t, D, S, Akm, Qt, Q, Qf, lim, y, full: y === null };
+    if (y !== null) {
+      const s = sect(y, D);
+      r.frac = y / D;
+      r.v = Q / s.A;
+      r.Fr = s.T > 0 ? r.v / Math.sqrt(g * s.A / s.T) : 0;
+    } else { r.frac = 1; }
+
+    const Qlim = qMan(lim * D, D, n, S);
+    r.Imax = Qlim * t.p * 3.6 / (Cr * Akm || 1);
+    r.okY = !r.full && r.frac <= lim;
+    r.okD = D >= 0.0999;
+    r.okS = S >= 0.01;
+    return r;
+  }
+
+  function renderTramosTable() {
+    const tb = $('tramosBody2'); tb.innerHTML = '';
+    stRacional.tramos.forEach((t, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td><input type="text" id="rtn${i}" value="${esc(t.name)}"></td>
+        <td><input type="number" id="rta${i}" step="0.01" min="0" value="${t.a}"></td>
+        <td><input type="number" id="rtp${i}" step="1" min="1" value="${t.p}"></td>
+        <td><input type="number" id="rtd${i}" step="0.5" min="0.5" list="dlist" value="${t.d}"></td>
+        <td class="mm" id="rtmm${i}">${p(t.d * 25.4, 1)}</td>
+        <td><input type="number" id="rts${i}" step="0.1" min="0.1" value="${t.S}"></td>
+        <td><input type="number" id="rtl${i}" step="0.5" min="0.5" value="${t.L}"></td>
+        <td><button class="iconbtn" aria-label="Quitar tramo">×</button></td>`;
+
+      const bind = (id, k, parse) => tr.querySelector('#' + id).addEventListener('input', e => {
+        const v = parse(e.target.value);
+        if (v !== null) { t[k] = v; if (k === 'd') $('rtmm' + i).textContent = p(v * 25.4, 1); changed(); }
+      });
+      bind('rtn' + i, 'name', v => v);
+      bind('rta' + i, 'a', pos);
+      bind('rtp' + i, 'p', v => { const x = parseInt(v); return x >= 1 ? x : null; });
+      bind('rtd' + i, 'd', pos);
+      bind('rts' + i, 'S', pos);
+      bind('rtl' + i, 'L', pos);
+
+      tr.querySelector('button').addEventListener('click', () => {
+        stRacional.tramos.splice(i, 1);
+        renderTramosTable(); changed();
+      });
+      tb.appendChild(tr);
+    });
+  }
+
+  // Datalist setup
+  const dl = document.createElement('datalist'); dl.id = 'dlist';
+  dl.innerHTML = COMM.map(v => `<option value="${v}">`).join('');
+  document.body.appendChild(dl);
+
+  function changed() {
+    dirty = true;
+    paintSave();
+    update();
+  }
+
+  function syncInputs() {
+    // View 1 Sync
+    $('proj1').value = stNodos.proj; $('loc1').value = stNodos.loc;
+    $('n1').value = stNodos.n; $('ymax1').value = stNodos.ymax; $('smin1').value = stNodos.smin;
+
+    // View 2 Sync
+    $('proj2').value = stRacional.proj; $('loc2').value = stRacional.loc;
+    $('I2').value = stRacional.I; $('Irange2').value = stRacional.I;
+    $('tr2').value = stRacional.tr; $('C2').value = stRacional.C;
+    $('n2').value = stRacional.n; $('ymax2').value = stRacional.ymax;
+  }
+
+  function update() {
+    if (currentTab === 'nodos') {
+      const { memo } = totalsNodos();
+      const rs = stNodos.nodos.map(nd => computeNodo(nd, memo[nd.id]));
+
+      rs.forEach(r => {
+        const nd = r.nd, id = nd.id;
+        nd.aportes.forEach((a, j) => {
+          if (a.src !== 'q') {
+            const qInput = $('aq-' + id + '-' + j);
+            if (qInput) qInput.value = p(memo[a.src], 3);
+          }
+        });
+
+        const qtEl = $('qt-' + id); if (qtEl) qtEl.textContent = r.cyc ? 'Bucle' : f(r.QLs, 3) + ' L/s';
+        const pill = $('pill-' + id); if (pill) { pill.className = 'pill ' + r.state; pill.textContent = r.txt; }
+
+        if (r.cyc) {
+          $('cy-' + id).hidden = false; $('drw-' + id).hidden = true; return;
+        }
+        $('cy-' + id).hidden = true; $('drw-' + id).hidden = false;
+
+        const parts = nd.aportes.map((a, j) => ({ j, name: a.name, q: a.src === 'q' ? (Number(a.q) || 0) : memo[a.src] }));
+        const stack = r.QLs > 0 ? `<div class="stack">${parts.map(o => o.q > 0 ? `<span style="flex:${o.q};background:${swatch(o.j)}" title="${esc(o.name)}: ${p(o.q, 3)} L/s"></span>` : '').join('')}</div>` : '';
+        const dminTxt = r.dmin ? `${inch(r.dmin)}"` : '> 12"';
+
+        $('xs-' + id).innerHTML = `
+          <div class="lbl2">Sección Transversal</div>
+          <div class="viz">${pipeSVG(r.frac, r.lim)}
+            <div>
+              <div class="big">${f(r.frac * 100, 1)}<small> %</small></div>
+              <div class="note">Nivel de llenado (y/D)</div>
+              <div class="bar"><i style="width:${Math.min(r.frac * 100, 100)}%"></i><em style="left:${r.lim * 100}%"></em></div>
+              <div class="barlbl"><span>0</span><span>Límite ${Math.round(r.lim * 100)} %</span><span>100</span></div>
+            </div>
+          </div>
+          ${stack ? `<div class="note">Distribución de aportes</div>${stack}` : ''}
+          <dl>
+            <dt>Tubería</dt><dd>Ø ${f(nd.d, 1)}" · ${f(r.D * 1000, 1)} mm</dd>
+            <dt>Q Total</dt><dd>${f(r.QLs, 3)} L/s</dd>
+            <dt>Q Admisible (${Math.round(r.lim * 100)}%)</dt><dd>${f(r.Qadm * 1000, 3)} L/s</dd>
+            <dt>Capacidad Usada</dt><dd>${f(r.Q / (r.Qadm || 1) * 100, 1)} %</dd>
+            <dt>Tirante normal y</dt><dd>${r.full ? 'Tubo lleno' : f((r.y || 0) * 1000, 1) + ' mm'}</dd>
+            <dt>Velocidad</dt><dd>${r.full || !r.v ? '—' : f(r.v, 2) + ' m/s'}</dd>
+            <dt>N° Froude</dt><dd>${r.full || !r.Fr ? '—' : f(r.Fr, 2) + (r.Fr > 1 ? ' (Supercrítico)' : ' (Subcrítico)')}</dd>
+            <dt>Ø mín. req.</dt><dd>${dminTxt}</dd>
+            <dt>S mín. req. (Ø act.)</dt><dd>${f(Math.max(r.Smin, stNodos.smin), 2)} %</dd>
+          </dl>
+          <div class="minichecks">
+            <span class="pill ${r.okY ? 'ok' : 'bad'}">y/D ≤ ${Math.round(r.lim * 100)}%</span>
+            <span class="pill ${r.okS ? 'ok' : 'bad'}">S ≥ ${f(stNodos.smin, 1)}%</span>
+            <span class="pill ${r.okD ? 'ok' : 'warn'}">Ø ≥ 0.10 m</span>
+          </div>`;
+
+        $('ls-' + id).innerHTML = profileSVG(r, false);
+      });
+
+      $('netBody1').innerHTML = rs.map(r => `<tr>
+        <td><a href="#node-${r.nd.id}">${esc(r.nd.name) || 'Sin nombre'}</a></td>
+        <td class="n">${r.nd.aportes.length}</td>
+        <td class="n">${r.cyc ? '—' : p(r.QLs, 3)}</td>
+        <td class="n">${inch(r.nd.d)}</td>
+        <td class="n">${p(r.nd.S, 2)}</td>
+        <td class="n">${r.cyc ? '—' : p(r.frac * 100, 1) + ' %'}</td>
+        <td class="n">${p(r.Qadm * 1000, 3)}</td>
+        <td><span class="pill ${r.state}">${r.txt}</span></td>
+      </tr>`).join('') || '<tr><td colspan="8" class="note">Sin nodos.</td></tr>';
+
+      const ok = rs.filter(r => r.state === 'ok').length, bad = rs.filter(r => r.state === 'bad').length;
+      const mx = rs.filter(r => !r.cyc).reduce((m, r) => Math.max(m, r.frac), 0);
+      const qmax = rs.filter(r => !r.cyc).reduce((m, r) => Math.max(m, r.QLs), 0);
+
+      $('summary1').innerHTML = `
+        <div class="chip"><b>${rs.length}</b><span>Nodos</span></div>
+        <div class="chip"><b style="color:var(--ok)">${ok}</b><span>Cumplen</span></div>
+        <div class="chip"><b style="color:var(--bad)">${bad}</b><span>Observados</span></div>
+        <div class="chip"><b>${f(mx * 100, 1)} %</b><span>Llenado Máx.</span></div>
+        <div class="chip"><b>${f(qmax, 3)} L/s</b><span>Caudal Mayor</span></div>`;
+
+    } else {
+      // View 2 (Rational)
+      const rs = stRacional.tramos.map(computeRacional);
+      $('cardsBox2').innerHTML = rs.map((r, i) => {
+        const near = r.okY && r.frac > r.lim * 0.85;
+        const cls = !r.okY ? 'bad' : near ? 'warn' : 'ok', txt = !r.okY ? 'No Cumple' : near ? 'Al Límite' : 'Cumple';
+
+        return `<article class="card">
+          <div class="cardL">
+            <div class="blockhead">
+              <h3 style="margin:0;font-family:'IBM Plex Sans Condensed';font-size:18px">${esc(r.t.name) || 'Sin nombre'}</h3>
+              <span class="pill ${cls}">${txt}</span>
+            </div>
+            <div class="viz">${pipeSVG(r.frac, r.lim)}
+              <div>
+                <div class="big">${f(r.frac * 100, 1)}<small> %</small></div>
+                <div class="note">Nivel de llenado (y/D)</div>
+                <div class="bar"><i style="width:${Math.min(r.frac * 100, 100)}%"></i><em style="left:${r.lim * 100}%"></em></div>
+                <div class="barlbl"><span>0</span><span>Límite ${Math.round(r.lim * 100)}%</span><span>100</span></div>
+              </div>
+            </div>
+            <dl>
+              <dt>Tubería</dt><dd>Ø ${f(r.t.d, 1)}" · ${f(r.D * 1000, 1)} mm</dd>
+              <dt>Caudal por Punto</dt><dd>${f(r.Q * 1000, 3)} L/s</dd>
+              <dt>Tirante normal y</dt><dd>${r.full ? 'Tubo lleno' : f(r.y * 1000, 1) + ' mm'}</dd>
+              <dt>Uso Capacidad</dt><dd>${f(r.Q / (r.Qf || 1) * 100, 1)} %</dd>
+              <dt>Velocidad</dt><dd>${r.full ? '—' : f(r.v, 2) + ' m/s'}</dd>
+              <dt>N° Froude</dt><dd>${r.full ? '—' : f(r.Fr, 2) + (r.Fr > 1 ? ' (Supercrítico)' : ' (Subcrítico)')}</dd>
+              <dt>I máx. Admisible</dt><dd>${f(r.Imax, 0)} mm/h</dd>
+            </dl>
+            <div class="minichecks">
+              <span class="pill ${r.okS ? 'ok' : 'bad'}">S ≥ 1 %</span>
+              <span class="pill ${r.okD ? 'ok' : 'warn'}">Ø ≥ 0.10 m</span>
+            </div>
+          </div>
+          <div class="cardR">
+            <div class="lbl2">Perfil Longitudinal</div>
+            <div class="profilewrap">${profileSVG(r, true)}</div>
+          </div>
+        </article>`;
+      }).join('') || '<p class="note">Sin tramos agregados.</p>';
+
+      const mx = rs.length ? Math.max(...rs.map(r => r.frac)) : 0;
+      $('summary2').innerHTML = `
+        <div class="chip"><b>${f(stRacional.I, 1)} mm/h</b><span>Intensidad Lluvia</span></div>
+        <div class="chip"><b>C = ${f(stRacional.C, 2)}</b><span>Coef. Escorrentía</span></div>
+        <div class="chip"><b>${rs.length}</b><span>Tramos</span></div>
+        <div class="chip"><b>${f(mx * 100, 1)} %</b><span>Llenado Máx.</span></div>`;
+    }
+  }
+
+  // --- Tab Switcher Function ---
+  window.switchTab = function(tab) {
+    currentTab = tab;
+    if (tab === 'nodos') {
+      $('tabNodos').classList.add('active'); $('tabRacional').classList.remove('active');
+      $('viewNodos').hidden = false; $('viewRacional').hidden = true;
+    } else {
+      $('tabRacional').classList.add('active'); $('tabNodos').classList.remove('active');
+      $('viewRacional').hidden = false; $('viewNodos').hidden = true;
+    }
+    update();
+  };
+
+  // Bind Nodos Inputs
+  $('proj1').addEventListener('input', e => { stNodos.proj = e.target.value; changed(); });
+  $('loc1').addEventListener('input', e => { stNodos.loc = e.target.value; changed(); });
+  const bindNum1 = (id, k) => $(id).addEventListener('input', e => {
+    const v = parseFloat(e.target.value);
+    if (Number.isFinite(v) && v > 0) { stNodos[k] = v; changed(); }
+  });
+  bindNum1('n1', 'n'); bindNum1('ymax1', 'ymax'); bindNum1('smin1', 'smin');
+
+  $('addNodeBtn').addEventListener('click', () => {
+    const nd = { id: uid(), name: 'N-' + (stNodos.nodos.length + 1), d: 3, S: 1, L: 10, aportes: [{ name: 'Aporte 1', src: 'q', q: 0.3 }] };
+    stNodos.nodos.push(nd);
+    renderNodos(); changed();
+    const el = document.getElementById('node-' + nd.id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  $('resetBtn1').addEventListener('click', () => {
+    if (confirm('¿Restablecer los datos de ejemplo de la Red por Nodos?')) {
+      stNodos = DEF_NODOS(); renderNodos(); syncInputs(); changed();
+    }
+  });
+
+  // Bind Racional Inputs
+  $('proj2').addEventListener('input', e => { stRacional.proj = e.target.value; changed(); });
+  $('loc2').addEventListener('input', e => { stRacional.loc = e.target.value; changed(); });
+  $('tr2').addEventListener('input', e => {
+    const v = parseFloat(e.target.value);
+    if (Number.isFinite(v) && v >= 2) {
+      stRacional.tr = v; stRacional.C = cOf(v); $('C2').value = stRacional.C.toFixed(2); changed();
+    }
+  });
+
+  const bindNum2 = (id, k) => $(id).addEventListener('input', e => {
+    const v = parseFloat(e.target.value);
+    if (Number.isFinite(v) && v > 0) {
+      stRacional[k] = v;
+      if (k === 'I') $('Irange2').value = v;
+      changed();
+    }
+  });
+  bindNum2('I2', 'I'); bindNum2('C2', 'C'); bindNum2('n2', 'n'); bindNum2('ymax2', 'ymax');
+
+  $('Irange2').addEventListener('input', e => {
+    stRacional.I = parseFloat(e.target.value);
+    $('I2').value = stRacional.I; changed();
+  });
+
+  $('addTramoBtn').addEventListener('click', () => {
+    stRacional.tramos.push({ name: 'Tramo ' + (stRacional.tramos.length + 1), a: 100, p: 1, d: 3, S: 1, L: 10 });
+    renderTramosTable(); changed();
+  });
+
+  $('resetBtn2').addEventListener('click', () => {
+    if (confirm('¿Restablecer datos de ejemplo del Método Racional?')) {
+      stRacional = DEF_RACIONAL(); renderTramosTable(); syncInputs(); changed();
+    }
+  });
+
+  renderNodos();
+  renderTramosTable();
+  syncInputs();
+  update();
+  paintSave();
+})();
+</script>
+</body>
+</html>
